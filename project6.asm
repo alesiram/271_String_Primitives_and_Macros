@@ -44,7 +44,7 @@ mGetString MACRO inputMsg, numsString, inputLenAllowed, stringLength
 	mDisplayString	inputMsg
 	MOV				EDX, numsString
 	MOV				ECX, inputLenAllowed
-	CALL			ReadString
+	CALL				ReadString
 	MOV				stringLength, EAX
 
 	; Restoring registers
@@ -70,9 +70,9 @@ ENDM
 ;---------------------------------------------------------------------------
 mDisplayString		MACRO string
 	PUSH			EDX
-	MOV				EDX, string
+	MOV			EDX, string
 	CALL			WriteString			
-	POP				EDX
+	POP			EDX
 
 ENDM
 
@@ -120,13 +120,13 @@ main PROC
 
 	; Get 10 valid integers from the user. 
 	; ReadVal will be called within the loop. 
-	mov				ECX, 10									; loop counter 
-	mov				EDI, OFFSET numArray
+	mov			ECX, 10								; loop counter 
+	mov			EDI, OFFSET numArray
 
 _inputLoop:
 	; current values 
-	PUSH			ECX										; stack address [EBP + 68]
-	PUSH			EDI										; stack address [EBP + 64]
+	PUSH			ECX								; stack address [EBP + 68]
+	PUSH			EDI								; stack address [EBP + 64]
 	
 	; procedure data variables 
 	PUSH			OFFSET stringArray						; stack address [EBP + 60]
@@ -141,7 +141,7 @@ _inputLoop:
 	PUSH			OFFSET errorMsg							; stack address [EBP + 36]
 	PUSH			OFFSET inputMsg							; stack address [EBP + 32]
 	CALL			ReadVal
-	ADD				EDI, TYPE SDWORD			
+	ADD			EDI, TYPE SDWORD			
 	LOOP			_inputLoop
 
 	; program titles to display 
@@ -154,7 +154,7 @@ _inputLoop:
 	; program data to display 
 	PUSH			OFFSET numArray							; stack address EBP + 32]
 	PUSH			OFFSET stringArray						; stack address [EBP + 28]
-	CALL			display									; procedure calls WriteVal from within procedure
+	CALL			display								; procedure calls WriteVal from within procedure
 
 	; display goodbye message 
 	mDisplayString	offset goodbye
@@ -185,7 +185,7 @@ main ENDP
 ;	- numArray at stack address [EBP + 56]
 ;	- inputLen at stack address [EBP + 52]
 ;	- userInput at stack address [EBP + 48]
-;	- errorFlag	 at address [EBP + 44]
+;	- errorFlag at address [EBP + 44]
 ;	- numberSign at stack address [EBP + 40]
 ;	- errorMsg at stack address [EBP + 36]
 ;	
@@ -199,13 +199,13 @@ main ENDP
 ReadVal PROC USES EAX EBX ECX EDX ESI EDI
 	 ; Set the stack frame
 	PUSH			EBP
-	MOV				EBP, ESP
+	MOV			EBP, ESP
 
 _startInputLoop:
 	; Set registers
-	MOV				ECX, EAX							; moving eax val into ecx
-	MOV				ESI, [EBP + 56]						; set numArray 
-	MOV				EBX, 0								
+	MOV			ECX, EAX							; moving eax val into ecx
+	MOV			ESI, [EBP + 56]						   	; set numArray 
+	MOV			EBX, 0								
 			
 	; call mGetString macro to get user input string
 	mGetString	[EBP + 32], [EBP + 48], MAXLENGTH,  [EBP + 52], [EBP + 60]
@@ -216,15 +216,15 @@ _startInputLoop:
 	PUSH			[EBP + 52]							; inputLen
 	PUSH			[EBP + 48]							; userInput
 	CALL			inputValidator
-	JMP				_prepConversion
+	JMP			_prepConversion
 
 ; converts string to interger 
 ; calls charProcessing 
 _prepConversion:
-	MOV				EAX, [EBP + 44]						; moving errorFlag for comparison with 0
-	MOV				EAX, [EAX]
-	CMP				EAX, 0
-	JNE				_error
+	MOV			EAX, [EBP + 44]							; moving errorFlag for comparison with 0
+	MOV			EAX, [EAX]	
+	CMP			EAX, 0
+	JNE			_error
 
 	; pushing registers to call charProcessing procedure 
 	push			[EBP + 64]							; EDI
@@ -235,22 +235,22 @@ _prepConversion:
 	call			charProcessing
 
 	; Check if the numeric value is zero
-	mov				EAX, [EBP + 44]						; Load the value of inputsign
-	mov				EAX, [EAX]							; Dereference to obtain the actual value
-	cmp				EAX, 0								; Compare with zero
-	JE				_stop								; Jump to _stop if the value is zero
+	mov			EAX, [EBP + 44]							; Load the value of inputsign
+	mov			EAX, [EAX]							; Dereference to obtain the actual value
+	cmp			EAX, 0								; Compare with zero
+	JE			_stop								; Jump to _stop if the value is zero
 
 _error:
 	; using mDisplayString macro to display error message
 	mDisplayString	[EBP + 36]
-	MOV				EAX, [EBP + 44]
-	MOV				DWORD PTR [EAX], 0					; Reset error flag: errorFlag
-	JMP				_startInputLoop						; branch to start of loop 
-		
+	MOV			EAX, [EBP + 44]
+	MOV			DWORD PTR [EAX], 0						; Reset error flag: errorFlag
+	JMP			_startInputLoop							; branch to start of loop 
+			
 _stop:
 	; restore registers 
-	POP				EBP
-	RET				44
+	POP			EBP
+	RET			44
 ReadVal ENDP
 
 ;---------------------------------------------------------------------------
@@ -281,63 +281,63 @@ ReadVal ENDP
 inputValidator PROC USES EAX ECX EDX ESI
 	; set the stack 
 	push			EBP
-	mov				EBP, ESP
+	mov			EBP, ESP
 
 	; get user value and input length 
 	; length check 
-	MOV				ESI, [EBP + 24]							; userInput
-	MOV				ECX, [EBP + 28]							; inputLen
-	CMP				ECX, 0
-	JLE				_notInRange								; branch if less than or equal 								
-	CMP				ECX, 12
-	JGE				_notInRange								; branch if greater than
+	MOV			ESI, [EBP + 24]							; userInput
+	MOV			ECX, [EBP + 28]							; inputLen
+	CMP			ECX, 0
+	JLE			_notInRange							; branch if less than or equal 								
+	CMP			ECX, 12
+	JGE			_notInRange							; branch if greater than
 	
 	; prepping for sub-procedure
 	; loading first ASCII character
-	XOR				EAX, EAX								; setting EAX to zero
+	XOR			EAX, EAX							; setting EAX to zero
 	CLD
 	LODSB
-	PUSH			[EBP + 36]								; numberSign 
-	PUSH			[EBP + 32]								; errorOccurred 
+	PUSH			[EBP + 36]							; numberSign 
+	PUSH			[EBP + 32]							; errorOccurred 
 	PUSH			EAX
-	CALL			firstChar								; call sub-proecedure to check sign of num
+	CALL			firstChar							; call sub-proecedure to check sign of num
 	
 	; length check
-	DEC				ECX
-	CMP				ECX, 0
-	JLE				_exit									; branch to exit if needed 
+	DEC			ECX
+	CMP			ECX, 0
+	JLE			_exit								; branch to exit if needed 
 
 _nextChar:
-	XOR				 EAX, EAX								; setting EAX to zero
-	CLD														; Clear the direction flag for LODSB to increments source pointer
-	LODSB													; Load the byte at the address pointed to by the source pointer (ESI) into AL and increment ESI                                            
+	XOR			 EAX, EAX							; setting EAX to zero
+	CLD											; Clear the direction flag for LODSB to increments source pointer
+	LODSB											; Load the byte at the address pointed to by the source pointer (ESI) into AL and increment ESI                                            
 			
-    ; number range check: 48 = 0, 57 = 9
-    CMP				EAX, 30h
-    JB				_notInRange
-    CMP				EAX, 39h
-    JA				_notInRange								; branch to not in range 
-    JMP				_continueLoop							; while valid, branch to next 
+  	  ; number range check: 48 = 0, 57 = 9
+   	CMP			EAX, 30h
+   	JB			_notInRange
+   	CMP			EAX, 39h
+  	JA			_notInRange							; branch to not in range 
+  	JMP			_continueLoop							; while valid, branch to next 
 	
 _notInRange:
-    ; updating error flag 
-    MOV				EAX, [EBP + 32]
-    MOV				DWORD ptr [EAX], 1
+    	; updating error flag 
+   	MOV			EAX, [EBP + 32]
+   	MOV			DWORD ptr [EAX], 1
 
 _continueLoop:
-    ; if invalid branch exit 
+	; if invalid branch exit
 	; if valid go to next char 
-    MOV				 EAX, 0
-    MOV				 EDX, [EBP + 32]
-    CMP				 EAX, [EDX]
-    JNE				_exit
-    LOOP			_nextChar								; if valid branch to next character 
-	JMP				_exit
+   	MOV			EAX, 0
+   	MOV		 	EDX, [EBP + 32]
+   	CMP			EAX, [EDX]
+  	JNE			_exit
+    	LOOP			_nextChar							; if valid branch to next character 
+    	JMP			_exit
 
 _exit:
 	; restore register
-	pop				EBP
-	ret				16
+	pop			EBP
+	ret			16
 
 inputValidator ENDP
 
@@ -363,37 +363,37 @@ inputValidator ENDP
 firstChar PROC uses EAX EDX
 	; set the stack 
 	PUSH			EBP
-	MOV				EBP, ESP
+	MOV			EBP, ESP
 
 	; comparison block for first character
-	MOV				EAX, [EBP + 16]						; ASCII character 
-	CMP				EAX, 2Dh							; Compare with '-'
-	JE				_negChar
-	CMP				EAX, 2Bh							; Compare with '+'		
-	JE				_exit	
-	CMP				EAX, 30h							; Compare with '0'			
-	JB				_notInRange
-	CMP				EAX, 39h							; Compare with '9'		
-	JA				_notInRange
-	JMP				_exit						
+	MOV			EAX, [EBP + 16]						; ASCII character 
+	CMP			EAX, 2Dh						; Compare with '-'
+	JE			_negChar
+	CMP			EAX, 2Bh						; Compare with '+'		
+	JE			_exit	
+	CMP			EAX, 30h						; Compare with '0'			
+	JB			_notInRange
+	CMP			EAX, 39h						; Compare with '9'		
+	JA			_notInRange
+	JMP			_exit						
 			
 ; if out of range 
 _notInRange:
-	MOV				EAX, [EBP + 20]
-	MOV				DWORD ptr [EAX], 1					; update errorFlag
+	MOV			EAX, [EBP + 20]
+	MOV			DWORD ptr [EAX], 1					; update errorFlag
 
 ; if character is negative
 ; accept it
 _negChar:
-	MOV				EAX, [EBP + 24]
-	MOV				EDX, -1
-	MOV				[EAX], EDX
-	JMP				_exit
+	MOV			EAX, [EBP + 24]
+	MOV			EDX, -1
+	MOV			[EAX], EDX
+	JMP			_exit
 			
 _exit:
 	; restoring register 
-	pop				EBP
-	RET				12
+	pop			EBP
+	RET			12
 
 firstChar ENDP
 
@@ -422,95 +422,95 @@ firstChar ENDP
 charProcessing PROC uses EAX EBX ECX EDX ESI EDI
 	; set the stack 
 	PUSH			EBP
-	MOV				EBP, ESP
+	MOV			EBP, ESP
 
 	; set registers 
-	MOV				EDI, [EBP + 48]						; EDI 
-	MOV				ESI, [EBP + 40]						; userInput
-	MOV				ECX, [EBP + 44]						; inputLen
+	MOV			EDI, [EBP + 48]						; EDI 
+	MOV			ESI, [EBP + 40]						; userInput
+	MOV			ECX, [EBP + 44]						; inputLen
 
 
 	; set edx and ebx registers 
-	MOV				EDX, 1								
-	MOV				EBX, 0								; val at 0
-	jmp				_startLoop							; branch to start loop 
+	MOV			EDX, 1								
+	MOV			EBX, 0							; val at 0
+	jmp			_startLoop						; branch to start loop 
 	
 _startLoop:
 	; initializes the loop for 
 	; processing the input string
-	MOV				EAX, ECX 
-	DEC				EAX 
-	ADD				ESI, EAX  
+	MOV			EAX, ECX 
+	DEC			EAX 
+	ADD			ESI, EAX  
 
 _processLoop:
-	XOR				 EAX, EAX							; setting EAX to zero
+	XOR			EAX, EAX						; setting EAX to zero
 	STD											
-	LODSB												; Load the byte at the address pointed 
+	LODSB										; Load the byte at the address pointed 
 
 	; compare neg sign 
 	; branch if neg 
-	CMP				EAX, 2Dh		
-	JE				_applySign
+	CMP			EAX, 2Dh		
+	JE			_applySign
 
 	; compare pos sign
 	; branch if pos
-	CMP				EAX, 2Bh		 
-	JE				_applySign
+	CMP			EAX, 2Bh		 
+	JE			_applySign
 	
 
 	; multiplying it by power of 10, 
 	; and adding it to the accumulated sum. 
 	; branches to next segment 
-	SUB				EAX, 30h							; Convert ASCII digit to numerical value
-	PUSH			EDX									; Save the previous power of 10
+	SUB			EAX, 30h							; Convert ASCII digit to numerical value
+	PUSH			EDX								; Save the previous power of 10
 	IMUL			EDX	
-	ADD				EBX, EAX							; add to the total sum  
-	JO				_error
-	JMP				_next
+	ADD			EBX, EAX							; add to the total sum  
+	JO			_error
+	JMP			_next
 
 _next:
 	; Pop the current power of 10 from the stack
-	POP				EDX										
-	MOV				EAX, EDX
+	POP			EDX										
+	MOV			EAX, EDX
 
 	;Set EDX as the multiplier
-	MOV				EDX, 10									
+	MOV			EDX, 10									
 	IMUL			EDX
 
 	; Update the new power of 10 in EDX
-	MOV				EDX, EAX								
+	MOV			EDX, EAX								
 	LOOP			_processLoop
 
 _applySign:
 	; applies the appropriate sign to the accumulated
 	; integer value based on the sign flag
-	MOV				EAX, EBX
+	MOV			EAX, EBX
 
 	; set numberSign 
-	MOV				EBX, [EBP + 32]					
-	MOV				EBX, [EBX]
+	MOV			EBX, [EBP + 32]					
+	MOV			EBX, [EBX]
 	IMUL			EBX						
-	JMP				_reset
+	JMP			_reset
 	
 _reset:
 	; sets the sign to positive
 	; saves the processed integer value 
 	; to the array
-	MOV				EBX, [EBP + 32]	
-	MOV				SDWORD PTR [EBX], 1
-	MOV				[EDI], EAX
-	JMP				_exit
+	MOV			EBX, [EBP + 32]	
+	MOV			SDWORD PTR [EBX], 1
+	MOV			[EDI], EAX
+	JMP			_exit
 
 _error:
 	; update error flag 
-	pop				EDX
-	mov				EAX, [EBP + 36]
-	mov				DWORD PTR [EAX], 1
+	pop			EDX
+	mov			EAX, [EBP + 36]
+	mov			DWORD PTR [EAX], 1
 
 _exit:
 	; restore registers
-	pop				EBP
-	ret				20
+	pop			EBP
+	ret			20
 charProcessing ENDP
 
 ;---------------------------------------------------------------------------
@@ -536,81 +536,81 @@ charProcessing ENDP
 WriteVal PROC USES EAX EBX ECX EDX EDI
 	; set the stack 
 	PUSH			EBP
-	MOV				EBP, ESP	
+	MOV			EBP, ESP	
 
 	; Set the divisor for string conversion to 1 billion (10^9)
 	; Set the maximum number of loops required for conversion to 10
-	MOV				EBX, 1000000000				
-	MOV				ECX, 10						; Set loop count
+	MOV			EBX, 1000000000				
+	MOV			ECX, 10						; Set loop count
 
 	; set pointers 
 	; branch to negate or nextVal 
-	MOV				EDI, [EBP + 32]				; stringArray
-	MOV				EDX, [EBP + 28]				; numArray
-	CMP				EDX, 0						; Compare EDX with zero
-	JL				_negate						
-	JMP				_nextval					
+	MOV			EDI, [EBP + 32]					; stringArray
+	MOV			EDX, [EBP + 28]					; numArray
+	CMP			EDX, 0						; Compare EDX with zero
+	JL			_negate						
+	JMP			_nextval					
 
 ; Handle Negative Number
 _negate:
-    NEG				 EDX						; Negate the value in EDX 
-    MOV				 EAX, '-'					; Load ASCII code for '-' into EAX
-    STOSB										; Store AL (EAX's lower byte) at [EDI], increment EDI	
+	NEG			EDX						; Negate the value in EDX 
+    	MOV			EAX, '-'					; Load ASCII code for '-' into EAX
+   	STOSB									; Store AL (EAX's lower byte) at [EDI], increment EDI	
 
 _nextval:
 	; set Eax and save the remainder
-	MOV				EAX, EDX
+	MOV			EAX, EDX
 	CDQ
-	DIV				EBX									
+	DIV			EBX									
 	PUSH			EDX
 
 	; compare with zero to see if you keep edx 
-	CMP				EAX, 0
-	JNE				_keepValue
-	CMP				ECX, 1
-	JE				_keepValue
+	CMP			EAX, 0
+	JNE			_keepValue
+	CMP			ECX, 1
+	JE			_keepValue
 	PUSH			EAX
 	PUSH			EBX
-	MOV				EAX, [EBP + 32]				; set stringArray 
+	MOV			EAX, [EBP + 32]					; set stringArray 
 
 _processChar:
     ; Compare if the previously written 
 	; value was not zero
 	; If previous character was zero
 	; move to the next character
-    MOV				BL, BYTE PTR [EAX]			; Load the byte from memory into BL
-    CMP				BL, 31h						; Compare BL with ASCII value '1'
-    JGE				_restoreAfterNonZero		; Jump if BL is greater than or equal to '1'
-    INC				EAX							; Move to next char in stringArray
-    CMP				EDI, EAX             
-    JLE				_popRegisters				; branch if less than or equal 
-    JMP				_processChar				
+   	MOV			BL, BYTE PTR [EAX]				; Load the byte from memory into BL
+   	CMP			BL, 31h						; Compare BL with ASCII value '1'
+    	JGE			_restoreAfterNonZero				; Jump if BL is greater than or equal to '1'
+    	INC			EAX						; Move to next char in stringArray
+    	CMP			EDI, EAX             
+    	JLE			_popRegisters					; branch if less than or equal 
+    	JMP			_processChar				
 
 _restoreAfterNonZero:
 	; Restore registers
-	POP				EBX
-	POP				EAX
+	POP			EBX
+	POP			EAX
 
 _popRegisters:
 	; Restore registers 
-	POP				EBX
-	POP				EAX
-	JMP				_processLoop				; branch to processLoop 
+	POP			EBX
+	POP			EAX
+	JMP			_processLoop					; branch to processLoop 
 
 _keepValue:
-	ADD				EAX, 30h					; convert eax to 0
+	ADD			EAX, 30h					; convert eax to 0
 	STOSB
 
 _processLoop:
 	; prep for division: Copy EBX to EAX,
 	; sign extend EAX to EDX:EAX
-    MOV				EAX, EBX   
-    CDQ                
+   	 MOV			EAX, EBX   
+   	 CDQ                
 
     ; Divide EDX:EAX by 10: Quotient in EAX, 
 	; Remainder in EDX
-    MOV				EBX, 10						 ; Divisor
-    DIV				EBX        
+   	 MOV			EBX, 10						 ; Divisor
+  	  DIV			EBX        
 
     ; Update EBX with the quotient (leading digit)
 	; Store the quotient in EBX for further processing
@@ -665,70 +665,70 @@ WriteVal ENDP
 display PROC USES EAX EBX ECX EDX ESI
 	; set the stack 
 	push			EBP
-	mov				EBP, ESP
+	mov			EBP, ESP
 
 	; set pointers
 	; display total nums entered message 
-	mov				ECX, 10
-	mov				ESI, [EBP + 32]						; numArray
-	mDisplayString	[EBP + 40]							; totalNumMsg
+	mov			ECX, 10
+	mov			ESI, [EBP + 32]						; numArray
+	mDisplayString		[EBP + 40]						; totalNumMsg
 
 _showNums:
 	; prep for push and set next index 
 	LODSD
-	PUSH			[EBP + 28]							; stringArray
+	PUSH			[EBP + 28]						; stringArray
 	PUSH			EAX								
 	CALL			WriteVal
 
 	; if greater or equal branch totalSum
-	CMP				ECX, 1									
-	JE				_totalSum
+	CMP			ECX, 1									
+	JE			_totalSum
 	mDisplayString [EBP + 48]							; display comma 
 	mDisplayString [EBP + 52]							; display space 
-	LOOP			_showNums							; return to top of label 
+	LOOP			_showNums						; return to top of label 
 
 _totalSum:
 	; add to totalSum 
-	MOV				ECX, 10
-	MOV				ESI, [EBP + 32]
-	MOV				EBX, 0		
+	MOV			ECX, 10
+	MOV			ESI, [EBP + 32]
+	MOV			EBX, 0		
 	
 _processSum:
 	; store next val into eax for processing 
 	LODSD
-	ADD				EBX, EAX
+	ADD			EBX, EAX
 	LOOP			_processSum
-	JMP				_totalSumMsg
+	JMP			_totalSumMsg
 
 _totalSumMsg:
 	; display totalSum message	
 	; display actual sum value 
-	mDisplayString	[EBP + 36]								; message 
-	MOV				EAX, EBX
+	mDisplayString		[EBP + 36]						; message 
+	MOV			EAX, EBX
 	PUSH			[EBP + 28]								
-	PUSH			EAX										; sum val 
+	PUSH			EAX							; sum val 
 	CALL			WriteVal
 
 _processAverage:
 	; Use max input allowed to divide total sum value 
-	MOV				EBX, 10
+	MOV			EBX, 10
 	CDQ
 	IDIV			EBX		
-	JMP				_averageMsg
+	JMP			_averageMsg
 
 _averageMsg:
 	; display average message
 	; display average 
-	mDisplayString	[EBP + 44]							; averageMsg
+	mDisplayString		[EBP + 44]						; averageMsg
 	PUSH			[EBP + 28]						
-	PUSH			EAX									; num to be displayed 
+	PUSH			EAX							; num to be displayed 
 	CALL			WriteVal
-	JMP				_exit
+	JMP			_exit
 
 _exit:
 	; restore registers 
-	pop				EBP
-	ret				16
+	pop			EBP
+	ret			16
 display ENDP
 
 END main
