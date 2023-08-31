@@ -461,10 +461,10 @@ _processLoop:
 	; multiplying it by power of 10, 
 	; and adding it to the accumulated sum. 
 	; branches to next segment 
-	SUB			EAX, 30h							; Convert ASCII digit to numerical value
-	PUSH			EDX								; Save the previous power of 10
+	SUB			EAX, 30h						; Convert ASCII digit to numerical value
+	PUSH			EDX							; Save the previous power of 10
 	IMUL			EDX	
-	ADD			EBX, EAX							; add to the total sum  
+	ADD			EBX, EAX						; add to the total sum  
 	JO			_error
 	JMP			_next
 
@@ -626,7 +626,7 @@ _exit:
    ; end process 
     MOV				EAX, 0
     STOSB
-    mDisplayString [EBP + 32]					 ; print stringArray 
+    mDisplayString [EBP + 32]					 		; print stringArray 
 
     ; reset 
     MOV				ECX, MAXLENGTH
