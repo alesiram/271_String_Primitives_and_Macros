@@ -41,15 +41,15 @@ mGetString MACRO inputMsg, numsString, inputLenAllowed, stringLength
 	; print input message with mDisplayString
 	; Get and save user input
 	mDisplayString	inputMsg
-	MOV				EDX, numsString
-	MOV				ECX, inputLenAllowed
-	CALL				ReadString
-	MOV				stringLength, EAX
+	MOV			EDX, numsString
+	MOV			ECX, inputLenAllowed
+	CALL			ReadString
+	MOV			stringLength, EAX
 
 	; Restoring registers
-	POP				EDX
-	POP				ECX
-	POP				EAX
+	POP			EDX
+	POP			ECX
+	POP			EAX
 ENDM
 
 ;---------------------------------------------------------------------------
