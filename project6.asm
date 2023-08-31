@@ -1,8 +1,7 @@
-TITLE String Primitives - Macros     (Proj6_Vasquem2.asm)
+TITLE String Primitives - Macros     (Proj6.asm)
 
 ; Author: Marisela Vasquez 
 ; Last Modified: 08/18/2023
-; OSU email address: Vasquem2@oregonstate.edu
 ; Course number/section: 400   CS271 Section 400
 ; Project Numser:    6      Due Date: 08/18/2023
 ; Description: 
